@@ -7,7 +7,7 @@ Decisions still to make for the [Dark Touch GDD](GDD.md). Tick an item when it i
 - [ ] Final names of the abilities (except Unholy Impale).
 - [ ] The two variants of each ability.
 - [ ] Whether aimed abilities get a soft-targeting assist or stay raw aim (decided during prototyping).
-- [ ] Which abilities combo with each other.
+- [ ] Rework the ability kit into a proper rotation, beyond one filler and one spender per role, and decide which abilities combo with each other.
 - [ ] Which abilities, if any, can be cast while moving.
 - [ ] How Spirit regenerates or is gained.
 - [ ] What causes stuns, for the player and for enemies.

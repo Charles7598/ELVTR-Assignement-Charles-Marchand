@@ -1,74 +1,49 @@
 # Dark Touch — Game Design Document
 
-**Dark Touch** is a roguelike where a spectral dark-magic arm raises fallen enemies into your army, played with WoW-style GCD and rotation combat using aimed abilities. This document contains only decisions made so far; everything undecided is listed in [Open questions](open-questions.md).
-
 Companion documents: [Art direction](art-direction.md) · [Audio and music](audio-and-music.md) · [Lore](lore.md) · [Open questions](open-questions.md) · [Canon](canon.md)
 
-## 1. Overview
+## 1. Executive Summary
 
-**Your weapon is an arm of dark magic, spectral and glowing, that can raise fallen enemies to fight for you, and every run you grow a stronger undead army.**
+**Dark Touch is a roguelike where a spectral dark-magic arm raises fallen enemies into your army, played with WoW-style GCD and rotation combat using aimed abilities.** A mage who lost an arm made a pact with a dark entity; the cursed arm it gave him casts on its own and turns every kill into a potential soldier. Every corpse is a choice: raise it to grow the army, or reap it to fuel your spells. Hidden stat grades and ranks turn army building into a hunt for the perfect soldier.
 
 | | |
 | --- | --- |
-| Title | Dark Touch |
 | Genre | Roguelike with army building and aimed, rotation-based combat |
 | Engine | Unreal Engine 5, Blueprints; C++ only where optimisation requires it |
 | Camera | Directly behind and above the player, WoW-style, with zoom in and out |
-| Platform | PC, mouse and keyboard. Controller support may be added later, so design choices should not block it |
-| World | Cel'ardor (working name). See [Lore](lore.md) |
-| Art style | Stylised, in the spirit of Fellowship. See [Art direction](art-direction.md) |
-| Context | Built over 7 weeks for the ELVTR multi-agent AI course, using AI agents across production |
+| Platform | PC, mouse and keyboard; controller may come later, so nothing should block it |
+| World and art | Cel'ardor, a continent at war ([Lore](lore.md)); stylised, in the spirit of Fellowship ([Art direction](art-direction.md)) |
+| Music | Dark neoclassical, cello-led, adaptive to combat ([Audio and music](audio-and-music.md)) |
+| Inspirations | Solo Leveling (raising soldiers), World of Warcraft and Fellowship (ability-bar combat), Diablo 4 (ability variants), Mythic+ (difficulty tiers) |
+| Demo scope | One level ending with a boss; every spell available from the start |
+| Production | Built over 7 weeks for the ELVTR multi-agent AI course by one designer and a team of 9 AI agents, each gated by the designer's approval |
 
-**Inspirations**
+## 2. Game Mechanics
 
-- **Solo Leveling:** the fantasy of getting your own soldiers, making them stronger and collecting different types of creatures.
-- **World of Warcraft and Fellowship:** ability-bar combat with instants, cast times, a global cooldown and abilities that interact, except that abilities are aimed instead of tab-targeted.
-- **Diablo 4:** unlockable variants on each ability for build depth.
-- **Mythic+:** stackable difficulty tiers for replayability and challenge.
+### Core loop
 
-**What the player does**
-
-- Fights with a kit of aimed abilities.
-- Chooses, for each fallen enemy, whether to raise it as a soldier or reap it for power.
-- Commands an army of up to 10 soldiers, organised into 3 command groups.
-- Clears the level and its boss to win the run, then returns stronger.
-
-**Story in one line:** a mage who lost an arm made a pact with a dark entity for a magic arm that casts on its own, and now raids the enemy army to protect the village where he woke up. Full story in [Lore](lore.md).
-
-## 2. Core loop
-
-**Fight, kill, then decide what each corpse becomes.**
+**Fight, kill, then decide what each corpse becomes.** Raising costs time and positioning but grows the army; reaping is instant and fuels your spenders. Across a run, the army you build and the Souls you gather carry you to the boss.
 
 ![Core loop: fight, enemy dies, Raise or Reap](images/core-loop.svg)
 
-Raising costs time and positioning but grows the army; reaping is instant and fuels your spenders. Across a run, the army you build and the Souls you gather carry you to the boss.
-
-## 3. Combat
+### Combat
 
 **Combat plays like a WoW ability bar, but every ability is aimed by the player.**
 
-**Rules**
+- Abilities are instant or have a cast time; a **1-second global cooldown** applies. No casting while moving, unless an ability allows it.
+- Taking a hit does not interrupt a cast: it **pushes the cast back by 1.5 s**. Only stuns interrupt.
+- **No dodge:** enemy windups, like the Blademaster's parry, are answered by stopping the cast and moving away.
+- Fillers build Souls; spenders consume them. **Damage is always a whole number.**
+- **Controls:** rebindable. Defaults A, E, 1–5 and Shift + the same: 14 slots for spells, command groups and orders.
 
-- Abilities are either instant or have a cast time.
-- A **1-second global cooldown** applies to abilities.
-- You cannot cast while moving, unless an ability specifically allows it.
-- Taking a hit does not interrupt a cast; it **pushes the cast's progress back by 1.5 seconds**. Stuns do interrupt casts.
-- Fillers build resources and spenders consume them, for single-target and AoE.
-- **Damage is always a whole number.** Every damage value and every HP loss is rounded, so an attack never deals decimals.
-- **No dodge.** The player has no dodge ability. Enemy windups, such as the Blademaster's parry, are answered by stopping a cast and moving away.
-
-**Controls (mouse and keyboard).** All keys can be rebound. Default bindings: A, E, 1, 2, 3, 4, 5, and the same seven with Shift, for 14 bindable slots shared between spells, command groups and orders.
-
-**Resources**
-
-| Resource | Loop | Gained by | Spent on |
+| Resource | Role | Gained by | Spent on |
 | --- | --- | --- | --- |
-| Spirit | Main | To define | Spells and abilities; reviving starting soldiers |
-| Souls | Short, Soul Shard-style | Killing enemies, reaping corpses; talents modify how they are gained | Spender abilities |
+| Spirit | Main resource | To define | Abilities; reviving starting soldiers |
+| Souls | Short loop, Soul Shard-style | Kills and Reap; talents change how | Spender abilities |
 
 There is no currency: no gold, no shop.
 
-**Abilities (first pass, names not final)**
+**Work in progress:** the ability kit below is a first pass. It will be reworked into a proper rotation, with abilities that set each other up and interact, rather than just one filler and one spender per role.
 
 | Ability | Role | Aiming |
 | --- | --- | --- |
@@ -76,109 +51,84 @@ There is no currency: no gold, no shop.
 | Unholy Impale | Single-target spender | Aimed |
 | Splinters | AoE filler | Cone toward the aim |
 | Death Nova | AoE spender | Ground circle |
-| Grasp | Root-style crowd control | Ground circle |
+| Grasp | Root | Ground circle |
 | Swap | Swap places with a soldier | Aimed |
 | Frenzy | Timed buff on soldiers | All soldiers |
-| Death Trap | Placed trap, like WoW's Hunter traps | Ground circle |
-| Flying Filthy Dagger | Thrown dagger that applies a poison debuff | Aimed |
+| Death Trap | Placed trap, like WoW Hunter traps | Ground circle |
+| Flying Filthy Dagger | Thrown dagger, poison debuff | Aimed |
 | Raise | Turn a corpse into a soldier | Aimed |
-| Reap | Consume a corpse for Souls and a 10-second buff | Aimed |
+| Reap | Consume a corpse for Souls and a 10 s buff | Aimed |
 
-Whether aimed abilities get a soft-targeting assist or stay pure raw aim will be decided during prototyping.
+Names are not final, except Unholy Impale. Each ability has **two unlockable variants** (Diablo 4-style); Reap has three: HP regen, damage or speed. Soft-targeting assist vs raw aim is decided during prototyping.
 
-**Variants:** each ability has two unlockable variants, Diablo 4-style. Reap has three, each a 10-second stat buff: HP regeneration, damage boost or movement speed.
-
-**Raising is a skill check.** Raising mid-fight is only possible if you play well, because of its cast time and the need to be close to the corpse.
-
-## 4. Necromancy and the army
+### Necromancy and the army
 
 **Every corpse is a choice: Raise it into a soldier, or Reap it for power.**
 
-**Raise**
+- **Raise:** any mob at or below the player's level. Cast time, and the player must be close to the corpse, so raising mid-fight is a skill check. Each soldier takes a slot; **10 slots** max at endgame.
+- **Reap:** instant. Grants Souls plus a 10-second buff for the player and the army, depending on the variant.
+- **Behaviour:** with no orders, soldiers attack the first enemy they see. Soldiers are dragged into **3 command groups** and ordered group by group. Dismissing a soldier frees its slot; bound (starting) soldiers cannot be dismissed.
 
-- Performed with the dark-magic arm.
-- Any mob can be raised, as long as the player's level is high enough. Example: the floor-1 boss could appear as a regular mob on floor 3, and become raisable there.
-- Has a cast time and requires being close to the corpse, which makes raising during combat dangerous.
-- Each raised soldier takes an army slot. Maximum: 10 slots at endgame.
-
-**Reap**
-
-- A separate ability that consumes a corpse instantly.
-- Grants Souls plus a 10-second buff for the army and you, depending on the variant (HP regen, damage or speed).
-
-**Soldier behaviour**
-
-- With no orders, soldiers attack the first enemy they see.
-- Orders and some spells direct them precisely.
-- **Command groups:** an army UI tab where the player drags and drops soldiers into 3 groups, then gives orders group by group.
-- Dismissing a soldier frees its slot. Bound (starting) soldiers cannot be dismissed.
-
-**Soldier roster.** Each type fights as an enemy first and can be raised as a soldier. Each type gives the player a special ability.
-
-| Type | Role and behaviour | Targeting | Player ability |
+| Type | Behaviour | Targeting | Player ability |
 | --- | --- | --- | --- |
-| Guard | Basic footman, sword and shield. Sometimes raises its shield to reduce damage, standing still and turning very slowly while doing so. | No particular rule | **Guard:** a temporary shield that reduces damage taken for 1.5 s |
-| Mage | Ranged spellcaster throwing arcane bolts. Occasionally casts a long, charged spell (spirit-bomb style) thrown for massive damage. | Focuses the biggest threat to it | TBD |
-| Rogue | Dual-blade warrior. Fast attacks, high damage, squishier than Guards. Can dash through normal monsters to reach its target, after a 1-second windup. | Focuses the player and elites first | TBD |
-| Tank | Armoured, muscular, slow and heavy. Hits hard and is tough to kill. | No particular rule | **Taunt:** the Tank forces all nearby enemies to focus it, Rogues included |
-| Blademaster | Elite-class two-handed warrior: sturdy, hits hard, fairly fast. Occasionally parries an attack or spell and sends the damage back to the attacker; a visible windup lets the player stop casting and move away to avoid the counter. | No particular rule | **Parry:** sends an attack back at 2x its damage |
+| Guard | Sword-and-shield footman; sometimes shields up, standing and turning slowly | None | **Guard:** damage reduction for 1.5 s |
+| Mage | Ranged arcane bolts; occasional long charged spell for massive damage | Biggest threat to it | TBD |
+| Rogue | Dual blades, fast, high damage, squishier; 1 s windup, then dashes through normal mobs | Player and elites first | TBD |
+| Tank | Armoured, slow, hits hard, very tough | None | **Taunt:** all nearby enemies focus the Tank, Rogues included |
+| Blademaster | Two-handed elite class: sturdy, hard-hitting, fairly fast; occasional parry with a visible windup, sending damage back | None | **Parry:** sends an attack back at 2x damage |
 
-**Elites.** Any mob can be an elite. An elite has an aura and a slightly different colour palette, and is granted a stat boost over the normal version.
+**Elites:** any mob can be an elite: an aura, a slightly different palette, and a stat boost.
 
-**Names and stat grades: hunting for the right soldier.**
+**Hunting for the right soldier.** Every mob has a random name. Alive, all mobs of a type share the same stats; hovering a corpse reveals its hidden **grades** and **rank**:
 
-- Every mob gets a random name drawn from a very large list, to give each one character.
-- Alive, all mobs of a type share the same stats.
-- Each mob has hidden grades, rolled at random, on 3 stats: **Vitality** (max HP), **Attack** (damage) and **Speed** (cast speed for ranged types, movement speed for melee types). Each stat gets its own grade: S = 1.25x the base stat, A = 1x, B = 0.75x.
-- Each mob also has a **rank**, inspired by Solo Leveling's shadow grades: Shadow (level 1), Asset (level 2), Ace (level 3), General (level 4). The rank boosts all stats without changing their grades: a General with a B in Attack keeps that B.
-- **Formula: (Base stat × Grade) × (1 + (Level − 1) × 0.5) = Effective stat**, so Shadow = 1x, Asset = 1.5x, Ace = 2x, General = 2.5x. Example: a General with B in Attack and base damage 10 deals (10 × 0.75) × 2.5 = 18.75, rounded to a whole number.
-- Hovering a corpse reveals its name, grades and rank, so the player decides whether it is worth raising.
-- Higher difficulty tiers give better odds of high grades.
-- This turns army building into a hunt for the right soldier, giving the optimisation satisfaction (and friction) of gearing without using gear.
+- **Grades**, one per stat: Vitality (max HP), Attack (damage), Speed (cast speed for ranged, movement speed for melee). S = 1.25x, A = 1x, B = 0.75x.
+- **Rank**, inspired by Solo Leveling: Shadow (1), Asset (2), Ace (3), General (4). Rank boosts every stat without changing grades.
+- **Effective stat = (Base × Grade) × (1 + (Level − 1) × 0.5)**: Shadow 1x, Asset 1.5x, Ace 2x, General 2.5x. Higher difficulty tiers give better grade odds.
 
-## 5. Run structure
-
-**For now a run is one level ending with a boss; the 3-level structure is the target for later.**
+### Run structure and progression
 
 | Element | Decision |
 | --- | --- |
-| Levels | Current scope: one level with a boss at the end. Later target: 3 medium levels, each ending with an elite or a boss |
-| Layout | A mix of rooms and open areas, for emergent gameplay from the level design |
-| Win condition | Kill the final boss |
-| Lose condition | Player HP reaches 0 |
-| Difficulty | Increasing tiers, like Mythic+: mobs have higher stats, better odds of high stat grades (so stronger soldiers to raise), and give more experience |
-| Run length | 20–25 minutes for the 3-level version |
+| Levels | Demo: one level ending with a boss. Later: 3 medium levels, each ending with an elite or boss, 20–25 minutes |
+| Layout | A mix of rooms and open areas, for emergent gameplay |
+| Win / lose | Kill the final boss / player HP reaches 0 |
+| Difficulty | Mythic+-style tiers: stronger mobs, better grade odds, more experience |
 
-## 6. Progression
-
-**You keep your starting soldiers no matter what; everything raised during a run is kept only if you win.**
-
-| What | Rule | After a win | After a death |
+| What | Rule | Win | Death |
 | --- | --- | --- | --- |
-| Starting soldiers | Brought into the run: 1, then up to 3 with levels and passive talents | Kept | Kept |
-| Raised soldiers | Raised during the run, up to the 10-slot cap | Kept | Lost |
-| Talismans | Found in hidden chests or dropped by fallen foes. The player equips 2 before a run; each boosts the stats of one specific spell, so the player enhances 2 favourite spells for the build. No armour or other gear. | To define | To define |
-| Spells | Demo: every spell is available from the start; experience and levels unlock the spell variants | Kept | Kept |
-| Talents | Passive talents; some change how Souls are gained | Kept | Kept |
+| Starting soldiers | 1, then up to 3 with levels and talents | Kept | Kept |
+| Raised soldiers | Up to the 10-slot cap | Kept | Lost |
+| Talismans | Only gear. Found in hidden chests or dropped by foes; 2 equipped before a run, each boosting one spell | To define | To define |
+| Spells | Demo: all available from the start; experience and levels unlock variants | Kept | Kept |
+| Talents | Passive; some change how Souls are gained | Kept | Kept |
 
-**Reviving**
+A fallen starting soldier can be revived mid-run for a significant Spirit cost. When a run ends, every kept soldier revives automatically, so the player can retry immediately.
 
-- A fallen starting soldier can be revived mid-run for a significant Spirit cost, so losing one hurts. Exact cost to be set in balancing.
-- When a run ends, every soldier you keep revives automatically, so you can retry immediately with the same set.
+## 3. AI Architecture
 
-**Roguelike randomness:** beyond your 1–3 starting soldiers, you have to build the rest of your army during each run.
+**Each agent shapes a part of what the player sees, hears and fights; none of them ships anything without the designer's approval.**
 
-## 7. Art and audio in brief
+| Agent | Its effect on gameplay |
+| --- | --- |
+| Gameplay Programmer | Every rule in this document becomes a working system the player can feel: aimed casting with the 1.5 s pushback, Raise and Reap, army slots and command groups, grades and ranks, talismans and progression. |
+| AI Director | Every enemy and soldier fights with its own readable personality: Rogues dash at the player, Tanks pull aggro with Taunt, Blademasters telegraph their parry. One behaviour per type serves both sides, so a creature you fought plays the same way once raised. |
+| Game Feel Director | Every ability, hit, raise and button press has its own feel through hit-stop, camera shake, sound and UI feedback; fillers stay light, spenders hit hard, and raising a soldier is the signature moment. |
+| Animation Scraper | Every action and ability has a validated animation on the shared UE5 Manny skeleton, so soldiers and enemies move consistently and the cursed arm stays readable. |
+| UI Designer | The HUD makes the rules visible: the cast bar shows the 1.5 s pushback, the army panel shows names, grades and ranks, and command groups are a drag away. |
+| Music Director | The cello-led score shifts between exploration, combat and boss layers, and every raise triggers the same iconic motif. |
+| Sound Designer | Every ability and hit gets a distinct sound effect, so the player can read the fight by ear. |
+| Technical Director | A full army of 10 soldiers plus enemies keeps a stable frame rate, and systems like casting, raising and slots never conflict. |
+| Game Director | Everything above stays consistent with the GDD and with itself: one art style, one audio identity, one set of rules. |
 
-- **Art:** stylised, Fellowship-like. Every character uses the UE5 Mannequin skeleton; the player is two skeletal meshes, the body and the cursed arm, so the arm can carry its own effects. The arm must stand out in every animation, and soldiers show their rank with a coloured aura. Details in [Art direction](art-direction.md).
-- **Audio:** dark neoclassical music with the cello always leading, adaptive layers for exploration, combat and boss, phonk elements under test, and an iconic cello motif when a soldier rises. Sound effects come from free, commercial-safe banks. Details in [Audio and music](audio-and-music.md).
+**Review flow:** a builder agent finishes a task → the Technical Director checks that it works → the Game Director checks that it fits the game → the designer validates. Validated facts go into [canon.md](canon.md), which every agent reads first.
 
-## 8. AI agent team
+## 4. Technical Strategy
 
-**Each agent has one job, a prompt you can copy, and a known cost; the Game Director reviews everyone's work against the GDD.**
+### Agent roles
 
 | Agent | Model | What it does | Prompt | Tools and cost |
 | --- | --- | --- | --- | --- |
+| Gameplay Programmer | Claude Opus 5.5 | Builds the game's systems (abilities, casting, raising, army, grades, progression). For each one, explains how it will build it and waits for your validation; then builds it, you test it, and it iterates until you validate. | [Open prompt](agents/gameplay-programmer.md) | UE5 MCP, or written Blueprint specs. About 20–40k tokens per explanation (roughly $0.15–0.29) and 40–80k per build (roughly $0.29–0.58). |
 | Game Director | Claude Opus 5.5 | Called at the end of every meaningful task. Checks the work against the GDD and against existing assets for consistency, then gives a verdict: approved, approved with notes, or changes required. Reviews only; you keep the final word. | [Open prompt](agents/game-director.md) | No external tools. About 10–20k tokens per review, roughly $0.07–0.15 per review. |
 | Technical Director | Claude Opus 5.5 | Keeps the map of every system (systems.md). Checks that systems' inputs and outputs fit together, that each piece of data has one owner, and that systems stay loosely coupled. Reviews performance (army AI, Event Tick, arm effects, spawning) and proposes streamlining that keeps the polish. Reviews before the Game Director. | [Open prompt](agents/technical-director.md) | No external tools required; optional Unreal MCP and Unreal Insights captures. About 15–30k tokens per review, roughly $0.11–0.22 per review. |
 | Game Feel Director | Claude Sonnet 5.5 | Gives every ability, hit, raise, button press and drag-and-drop its own distinct, polished feel: anticipation, impact, follow-through, camera shake, hit-stop, sound, UI feedback and the arm's effect. Writes a feel spec per interaction and reviews recordings with your 1–5 ratings. | [Open prompt](agents/game-feel-director.md) | No external tools required; reviews GIFs or short videos you record. About 5–10k tokens per spec (roughly $0.02–0.04) and 10–20k per review (roughly $0.04–0.07). |
@@ -188,8 +138,33 @@ Whether aimed abilities get a soft-targeting assist or stay pure raw aim will be
 | AI Director | Claude Opus 5.5 | Owns the behaviour logic of every enemy and soldier, one shared version per type. Builds basic logic first; before each upgrade, presents how it will build it, what it costs and which details it recommends, discusses with you, and implements only once you confirm. | [Open prompt](agents/ai-director.md) | UE5 MCP. About 20–40k tokens per proposal round (roughly $0.15–0.29) and 40–80k per implemented stage (roughly $0.29–0.58). |
 | Animation Scraper | Claude Sonnet 5.5 | Finds 2 candidate animations per action and ability, Manny-skeleton first (Fab, Mixamo and others), for you to validate or reject. Then downloads the validated ones, or gives you the link when it needs your account, and retargets them to the UE5 Manny skeleton. | [Open prompt](agents/animation-scraper.md) | UE5 MCP; Mixamo free with an Adobe account, Fab free to paid (you approve purchases). About 5–10k tokens per animation, roughly $0.02–0.04. |
 
-**Sound review:** the [Dark Touch Sound Board](https://claude.ai/artifact/RfTmdaNEp5cF3bLusSwN8b) lists every needed sound with its 3 candidates. Play each one, pick the best, or press Find 3 more with an optional note; the agent's next pass replaces the candidates and never repeats a rejected sound.
+**Sound review:** the [Dark Touch Sound Board](https://claude.ai/artifact/RfTmdaNEp5cF3bLusSwN8b) lists every needed sound with its 3 candidates: play, pick, or ask for 3 more.
 
-Token figures are estimates. Dollar costs assume the API rates per million tokens (input / output): Opus 5.5 $4 / $20, Sonnet 5.5 $2 / $10, Haiku 5.5 $0.10 / $0.50 for prompts under 100k tokens, with about 80% of tokens read and 20% written; other agents, their interactions and the overall token budget are still to be defined.
+### Token budget
 
-**Canon file:** [canon.md](canon.md), next to this GDD, is a short list of facts only the designer validates; every agent reads it before working, and the Game Director checks each review against it first, falling back to this GDD when it is silent.
+**The agents run on a Claude Pro subscription: $20 per month, about $40 for the 7-week course.** Claude Code is included, and its usage shares the same limits as claude.ai: a limit that resets every five hours, plus a weekly limit. Opus agents use those limits faster than Sonnet or Haiku, so the heaviest work is spread across sessions; usage credits can be enabled if a limit blocks a deadline. The per-use costs in the table above are API-equivalent figures, for reference.
+
+| Agent | Model | Assumed workload over 7 weeks | Tokens |
+| --- | --- | --- | --- |
+| Gameplay Programmer | Opus 5.5 | ~15 systems, each explained, built and fixed twice | ~1.8M |
+| Game Director | Opus 5.5 | 60 reviews | ~0.9M |
+| Technical Director | Opus 5.5 | 40 reviews | ~0.9M |
+| AI Director | Opus 5.5 | 6 proposal rounds, 4 implemented stages | ~0.4M |
+| Game Feel Director | Sonnet 5.5 | 15 specs, 20 reviews | ~0.4M |
+| UI Designer | TBD | 8 screens × 3 rounds | ~0.7M |
+| Animation Scraper | Sonnet 5.5 | 40 animations | ~0.3M |
+| Music Director | Sonnet 5.5 | 10 rounds | ~0.1M |
+| Sound Designer | Haiku 5.5 | 30 sounds × 2 rounds | ~0.4M |
+| **Total** | | | **~6M** |
+
+**Outside the subscription:** about $10 of music generation, and an ElevenLabs plan from $6 per month while its API is used. API-equivalent value of the token total, without the UI Designer: about $32 (Opus 5.5 $4 / $20, Sonnet 5.5 $2 / $10, Haiku 5.5 $0.10 / $0.50 per million input / output tokens, assuming 80% read and 20% written).
+
+**Cost levers:** canon.md stays short so agents read it instead of the whole GDD; reviewers receive only what changed; Game Director reviews are batched after several small tasks.
+
+### How the agents run (proposed setup, to confirm in week 1)
+
+- **Claude Code**, included in Pro, opened in the project's git repository.
+- **Each agent is a Claude Code subagent:** a file in `.claude/agents/` holding its prompt from the [agents](agents/) folder and its model (Opus, Sonnet or Haiku). Agents that build in the engine get the UE5 MCP.
+- **The main session acts as producer:** the designer asks for a task, it hands the task to the right agent, then to the Technical Director and the Game Director for review.
+- **Shared memory lives in files** in the repository: canon.md, systems.md, feel.md, animations.md, reviews.md. Git keeps the history of every change.
+- **Every validation gate is the designer**, answering in the session; sounds are reviewed on the Sound Board.
