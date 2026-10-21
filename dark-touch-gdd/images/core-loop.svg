@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" role="img" aria-label="Core loop: every kill feeds either your army or your rotation">
+  <rect width="760" height="330" fill="#ffffff"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#6b6b78"/>
+    </marker>
+  </defs>
+  <text x="24" y="28" font-size="15" font-weight="600" fill="#1d1a1f">Every kill feeds either your army or your rotation</text>
+  <g fill="none" stroke="#6b6b78" stroke-width="1.25">
+    <path d="M176 170H208" marker-end="url(#a)"/>
+    <path d="M330 170H346" marker-end="url(#a)"/>
+    <path d="M420 126V100H508" marker-end="url(#a)"/>
+    <path d="M420 214V240H508" marker-end="url(#a)"/>
+    <path d="M620 64V52H100V140" marker-end="url(#a)"/>
+    <path d="M620 276V300H100V200" marker-end="url(#a)"/>
+  </g>
+  <rect x="24" y="142" width="152" height="56" rx="8" fill="none" stroke="#6b6b78" stroke-width="1.25"/>
+  <text x="100" y="164" text-anchor="middle" font-weight="600" fill="#1d1a1f">Fight</text>
+  <text x="100" y="184" text-anchor="middle" font-size="11.5" fill="#5a5560">Aimed abilities</text>
+  <rect x="210" y="148" width="120" height="44" rx="8" fill="none" stroke="#6b6b78" stroke-width="1.25"/>
+  <text x="270" y="174" text-anchor="middle" fill="#1d1a1f">Enemy dies</text>
+  <polygon points="348,170 420,126 492,170 420,214" fill="#e9f5ee" stroke="#2f8f5b" stroke-width="2"/>
+  <text x="420" y="174" text-anchor="middle" font-weight="600" fill="#1d1a1f">Raise or Reap?</text>
+  <rect x="510" y="64" width="220" height="72" rx="8" fill="none" stroke="#6b6b78" stroke-width="1.25"/>
+  <text x="620" y="88" text-anchor="middle" font-weight="600" fill="#1d1a1f">Raise</text>
+  <text x="620" y="104" text-anchor="middle" font-size="11.5" fill="#5a5560">Cast time, must be close</text>
+  <text x="620" y="120" text-anchor="middle" font-size="11.5" fill="#5a5560">Takes an army slot (max 10)</text>
+  <rect x="510" y="204" width="220" height="72" rx="8" fill="none" stroke="#6b6b78" stroke-width="1.25"/>
+  <text x="620" y="228" text-anchor="middle" font-weight="600" fill="#1d1a1f">Reap</text>
+  <text x="620" y="244" text-anchor="middle" font-size="11.5" fill="#5a5560">Instant, gains Souls</text>
+  <text x="620" y="260" text-anchor="middle" font-size="11.5" fill="#5a5560">10 s buff for you and the army</text>
+  <text x="440" y="92" font-size="11.5" fill="#5a5560">raise</text>
+  <text x="440" y="232" font-size="11.5" fill="#5a5560">reap</text>
+  <text x="360" y="46" text-anchor="middle" font-size="11.5" fill="#5a5560">Soldiers fight at your side</text>
+  <text x="360" y="318" text-anchor="middle" font-size="11.5" fill="#5a5560">Souls fuel your spenders</text>
+</svg>
