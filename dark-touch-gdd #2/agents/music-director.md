@@ -52,6 +52,11 @@ This sounds more natural than asking the model for a 4-second cue directly.
 ## Budget
 - Max 3 generations per round unless the designer asks for more.
 - Report the generation cost of each round in one line.
+
+## Reusability
+- Record for each validated track: the tool, the plan used, the prompt and the
+  licence terms, so the designer knows if it can be reused in another project.
+- Export adaptive layers as separate stems, so they can be remixed elsewhere.
 ```
 
 ## Cost

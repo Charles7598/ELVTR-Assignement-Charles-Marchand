@@ -51,17 +51,26 @@ a painted style frame when the art style matters more than the layout.
   validated visual language and vary in layout and information design instead.
 - Hand the validated screen to the Game Feel Director (hover, press, drag-and-drop
   and transition effects) and to the Technical Director (UMG structure, data it needs).
+
+## Reusability
+- Design the UI as a kit of reusable widgets (health bar, cast bar, ability slot,
+  tooltip, drag-and-drop list, world widget) with parameters for colours, outline
+  and content, so another game can reuse them with a new skin.
+- Keep the style (colours, fonts, frames) in one place, separate from the layout,
+  so a reskin changes one file, not every screen.
+- For each validated widget, list its parameters in the UI section of the
+  repository's documentation.
 ```
 
 ## Draft screen order (to validate)
 
 Built only from screens the GDD implies; reorder, add or remove freely.
 
-1. In-game HUD (action bar, cast bar, Spirit, Souls, HP, army)
+1. In-game HUD (action bar, cast bar, Spirit, Souls, HP, army, enemy health bars in their rank colour, styled like default WoW retail nameplates, gold outline for elites; corpse world widget with name, rank and stat grades when aimed at; Alt shows all bars and widgets)
 2. Army organisation tab (drag and drop into 3 command groups)
 3. Builds tab (abilities, their variants, talents, talismans)
-4. Level-up choice during a run
-5. Pre-run screen (choose starting soldiers and talismans, difficulty tier)
+4. End-of-run level-up (the unlock gained)
+5. Pre-run screen at the base (the collection; choose 1-3 soldiers to bring and talismans, difficulty tier; a Rename button on each soldier)
 6. End-of-run results (win or death, soldiers kept)
 7. Main menu
 8. Pause and settings

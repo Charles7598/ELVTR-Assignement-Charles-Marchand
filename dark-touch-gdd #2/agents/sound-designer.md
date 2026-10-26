@@ -63,6 +63,12 @@ downloads need the designer's account).
 ## Budget
 - At most 10 searches per entry per round.
 - Never invent a sound, a license or an author. If a field is unknown, leave it empty.
+
+## Reusability
+- Only licences that also allow reuse in other commercial projects (CC0, Pixabay,
+  CC-BY with credits). Store each sound's source, author and licence with it.
+- Name files by what they sound like ("Bone_Crack_Short", "Spectral_Whoosh"), not
+  by Dark Touch ability, so the library can serve another game.
 ```
 
 ## Cost

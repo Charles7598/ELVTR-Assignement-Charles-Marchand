@@ -57,6 +57,11 @@ At most 3 questions for the designer.
 
 Then append a 2–3 line summary of the verdict to reviews.md, and add to canon.md
 only facts the designer has validated.
+
+## Reusability
+- Besides fit with the game, check that the work keeps game-specific content
+  (names, lore, numbers) in data or in /Game/DarkTouch/, and the system itself
+  generic. Flag anything that ties a system to Dark Touch without need.
 ```
 
 ## Cost

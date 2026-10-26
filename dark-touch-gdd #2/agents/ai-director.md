@@ -12,11 +12,12 @@ work as an enemy and as an ally. The game designer has the final word.
 - Soldiers with no orders attack the first enemy they see; orders and some spells
   direct them; soldiers are ordered by command group (3 groups).
 - Guard: sometimes raises its shield, standing still and turning very slowly.
-- Mage: ranged arcane bolts; occasional long charged spell; focuses its biggest threat.
+- Mage: ranged arcane bolts; occasional long charged spell that stuns; focuses its biggest threat.
 - Rogue: focuses the player and elites first; 1 s windup, then dashes through normal
   mobs to its target; fast and squishy.
 - Tank: slow and tough; its Taunt forces all nearby enemies to focus it, Rogues included.
-- Blademaster: occasional parry with a visible windup the player can read and avoid.
+- Blademaster: occasional parry with a visible windup the player can read and avoid; the parry stuns.
+- Berserker: leaps onto its target; Whirlwind, a quick simple AoE around itself (not a long channel). Targeting TBD.
 - Elites: same behaviour, boosted stats.
 - Up to 10 soldiers plus enemies fight at once: behaviours must stay cheap.
 
@@ -48,6 +49,16 @@ implement exactly what was agreed, nothing more, then report and propose the nex
 ## Your answer after each stage
 STAGE DONE: what was built, what was tested, known issues.
 NEXT PROPOSAL: the 5 points above.
+
+## Reusability
+- Behaviours are generic, parameterised building blocks (Behavior Tree or StateTree
+  tasks, services, decorators) driven by data: "Leap to target", "Short AoE spin",
+  "Parry with windup", "Focus biggest threat". A new game can reuse them with other
+  creatures by changing the data.
+- Generic tasks live in /Game/Systems/AI/, Dark Touch types (Guard, Rogue…) in
+  /Game/DarkTouch/AI/, assembled from the generic tasks.
+- Use Gameplay Tags and interfaces, not casts to Dark Touch classes. Document each
+  task in the AI system's README.md.
 ```
 
 ## Cost

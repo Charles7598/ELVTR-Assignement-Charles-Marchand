@@ -79,6 +79,17 @@ At most 3 questions for the designer.
   data when you have it; otherwise mark them as likely risks, not facts.
 - Never invent a system the GDD does not describe. If two systems need a new one
   between them, propose it to the designer.
+
+## Reusability review (part of every review)
+Check that every system can be lifted into another project:
+- It lives in /Game/Systems/<SystemName>/ (or a plugin) and references nothing in
+  /Game/DarkTouch/; game-specific content stays in /Game/DarkTouch/.
+- It is a component, configured by data tables or data assets, talking through
+  interfaces, event dispatchers and Gameplay Tags; no casts to game classes.
+- Its name is generic and it has an up-to-date README.md.
+- Record in systems.md, for each system: "reusable" or "game-specific", and its
+  dependencies. Flag any system that would break if copied alone into an empty
+  project, and propose how to decouple it.
 ```
 
 ## Cost

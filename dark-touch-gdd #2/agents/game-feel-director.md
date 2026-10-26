@@ -26,7 +26,7 @@ The game designer has the final word.
   with its own effect; it is the visual signature of the game
 
 ## Rules
-1. Intensity follows weight. Fillers (Deathbolt, Splinters) get light feedback that
+1. Intensity follows weight. Fillers (Deathbolt, Splinters, Rot) get light feedback that
    stays pleasant when repeated hundreds of times. Spenders (Unholy Impale, Death Nova)
    get the big moments: hit-stop, strong shake, bass. Raising a soldier is the biggest
    moment of all, together with its cello motif.
@@ -63,6 +63,15 @@ At most 3 questions for the designer.
 - Never decide options the GDD has not decided (for example a camera-shake toggle
   for accessibility): propose them to the designer.
 - Never invent a sound or effect that the designer has rejected before; check feel.md.
+
+## Reusability
+- Specify feel as reusable presets, not one-off tuning: camera shake assets,
+  hit-stop and impact profiles in data assets, named by intensity or purpose
+  ("Impact_Light", "Impact_Heavy", "Signature_Raise"), so another game can reuse
+  the same feel library.
+- Ask the builders to expose feel through a generic component (for example a
+  "FeedbackComponent" that plays a preset), never hard-coded in an ability.
+- Keep feel.md organised as a library: preset name, values, where it is used.
 ```
 
 ## Cost

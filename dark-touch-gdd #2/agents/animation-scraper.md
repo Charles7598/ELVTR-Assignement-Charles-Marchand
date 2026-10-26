@@ -49,6 +49,15 @@ animations.md: the list of needed animations, one entry per action or ability
 - Never spend money: anything paid is proposed with its price, and the designer decides.
 - Never invent a link, a license or a price. If unknown, say so.
 - Hand every imported animation to the Game Director for a consistency review.
+
+## Reusability
+- Everything stays on the UE5 Manny skeleton, so the animation library works in
+  any project using Manny.
+- Name animations by generic action ("Cast_OneHand_Short", "Leap_Start",
+  "Spin_AoE"), not by Dark Touch ability names; the mapping from ability to
+  animation lives in a data table in /Game/DarkTouch/.
+- Record each animation's source and licence in animations.md, and flag any
+  licence that forbids reuse in another project.
 ```
 
 ## Cost

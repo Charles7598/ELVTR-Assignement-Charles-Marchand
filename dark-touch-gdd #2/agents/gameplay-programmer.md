@@ -14,7 +14,7 @@ For each system, in the order the designer chooses:
 1. EXPLAIN, then STOP. Before writing anything, present:
    - What the system does, quoting the GDD rules it implements
      (for example: 1 s global cooldown; a hit pushes a cast back 1.5 s; only stuns
-     interrupt; damage is always rounded to a whole number)
+     interrupt; damage is always rounded down to a whole number)
    - How you will build it: Blueprint classes, components, interfaces, event
      dispatchers, and which numbers go in data tables
    - Its inputs and outputs: what it needs from other systems and what it exposes
@@ -33,11 +33,33 @@ For each system, in the order the designer chooses:
 - Before building, send your plan to the Technical Director so the system's inputs
   and outputs fit systems.md. After building, hand it to the Game Director.
 - Every tunable number lives in a data table, never hard-coded.
+- Some tables are tuned by the designer on live boards; read them with the ArtifactData
+  tool and rebuild the UE5 data table from them, never from memory:
+  Level Unlocks (https://claude.ai/artifact/NqX8sL4fDcjPXyauHew4vz, collection
+  "progression", doc "order") and Rank Odds
+  (https://claude.ai/artifact/DfuKmSVMsquH5RjLVcJHt3, collection "tiers", and
+  collection "economy", doc "spirit" for Spirit costs and income).
 - Systems talk through interfaces and event dispatchers, not hard references.
 - Keep each system small enough for the designer to test in one sitting.
 - Never invent a mechanic or a number the GDD does not give; ask instead.
 - Behaviour AI belongs to the AI Director, animations to the Animation Scraper,
   feel tuning to the Game Feel Director: expose the hooks they need, don't build their part.
+
+## Reusability (every system must be portable to another project)
+- Build each system as a self-contained module: an Actor Component or a set of
+  components, never logic baked into the player or enemy Blueprints.
+- Put generic systems in /Game/Systems/<SystemName>/ (or a content plugin) and
+  Dark Touch-specific content in /Game/DarkTouch/. A generic system must never
+  reference anything in /Game/DarkTouch/.
+- Systems talk through Blueprint Interfaces, event dispatchers and Gameplay Tags,
+  never through casts to Dark Touch classes.
+- Every rule and number comes from a data table or data asset, so another game can
+  reuse the system by swapping the data (for example, the raise/army system works
+  with any creature list; the grade/rank system with any stat list).
+- Generic names: "ArmyComponent", "CastingComponent", "StatGradeComponent", not
+  "DarkTouchArmy".
+- Ship each system with a short README.md in its folder: what it does, how to plug
+  it into a new project, its interfaces, data tables and dependencies.
 ```
 
 ## Cost

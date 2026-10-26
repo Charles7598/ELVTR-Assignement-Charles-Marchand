@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 340" font-family="DejaVu Sans, Arial, sans-serif" font-size="13">
+  <rect width="420" height="340" fill="#ffffff"/>
+  <!-- Splinters: flat base twice the player's width, sides opening 30 degrees in total, rounded far edge -->
+  <line x1="210" y1="387" x2="140" y2="125" stroke="#bbb" stroke-dasharray="4 4"/>
+  <line x1="210" y1="387" x2="280" y2="125" stroke="#bbb" stroke-dasharray="4 4"/>
+  <path d="M184 290 L236 290 L280 125 Q210 100 140 125 Z" fill="#3FE0D0" fill-opacity="0.22" stroke="#1b8f84" stroke-width="2"/>
+  <text x="210" y="80" text-anchor="middle" fill="#1d1a1f" font-weight="bold">30° cone toward the aim</text>
+  <text x="210" y="200" text-anchor="middle" fill="#1b5f58">hits every</text>
+  <text x="210" y="216" text-anchor="middle" fill="#1b5f58">enemy inside</text>
+  <circle cx="210" cy="290" r="13" fill="#1d1a1f"/>
+  <text x="210" y="322" text-anchor="middle" fill="#1d1a1f">Player</text>
+  <line x1="184" y1="300" x2="184" y2="290" stroke="#6c6570"/>
+  <line x1="236" y1="300" x2="236" y2="290" stroke="#6c6570"/>
+  <text x="250" y="294" fill="#6c6570">Base: twice the</text>
+  <text x="250" y="310" fill="#6c6570">player's width</text>
+</svg>
