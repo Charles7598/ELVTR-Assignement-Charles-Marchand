@@ -1,0 +1,93 @@
+%%{init: {"flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 50, "rankSpacing": 60, "padding": 20}, "themeVariables": {"fontSize": "18px", "edgeLabelBackground": "#ffffff"}}}%%
+flowchart TD
+    subgraph S1["<span style='font-size:30px;font-weight:800'>① SHARED MEMORY · start here</span>"]
+        t1[" "]
+        canon["canon.md + GDD<br/>rules and numbers"]
+        rules["CLAUDE.md<br/>C++ first, verify loop, 3-tries rule"]
+        plan["plan.md<br/>weekly milestones"]
+    end
+
+    subgraph S2["<span style='font-size:30px;font-weight:800'>② ORCHESTRATOR</span>"]
+        t2[" "]
+        coord["Machine coordinator<br/>SessionStart hook + Haiku agent<br/>detects PC / laptop / phone, git pull"]
+        main["Claude Code main session<br/>picks the next task from the plan,<br/>delegates to the agents"]
+    end
+
+    subgraph S3["<span style='font-size:30px;font-weight:800'>③ PLANNING</span>"]
+        t3[" "]
+        producer["Producer · Sonnet<br/>milestones in plan.md"]
+    end
+
+    subgraph S4["<span style='font-size:30px;font-weight:800'>④ BUILDERS</span>"]
+        t4[" "]
+        gp["Gameplay Programmer<br/>Opus · C++ + tests"]
+        ui["UI Designer<br/>4 mockups per screen"]
+        anim["Animation Scraper<br/>Sonnet · find, validate, retarget"]
+    end
+
+    subgraph S5["<span style='font-size:30px;font-weight:800'>⑤ SAFETY NET</span>"]
+        t5[" "]
+        verify["verify.ps1 on every agent stop<br/>build changed C++ · crash reports<br/>new editor-log errors · run-tests.ps1"]
+        ue[("UE 5.8 project<br/>GameSystems plugin + DarkTouch module<br/>via unreal-mcp")]
+    end
+
+    subgraph S6["<span style='font-size:30px;font-weight:800'>⑥ REVIEWERS</span>"]
+        t6[" "]
+        td["Technical Director<br/>Opus · systems fit together"]
+        gd["Game Director<br/>Opus · work vs GDD"]
+    end
+
+    subgraph S7["<span style='font-size:30px;font-weight:800'>⑦ SINGLE HUMAN CHANNEL</span>"]
+        t7[" "]
+        desk["Review Desk agent<br/>Sonnet"]
+        inbox["review/inbox.js + index.html<br/>one page: questions, mockups, tests"]
+        designer(["Game designer<br/>final word on every choice"])
+        log["review/decisions.md<br/>every answer, dated"]
+    end
+
+    later["Planned for later weeks<br/>AI Director · Level Designer · Game Feel<br/>Balance Analyst · Sound · Music · Environment"]
+
+    t1 ~~~ canon & rules & plan
+    t2 ~~~ coord
+    t3 ~~~ producer
+    t4 ~~~ gp & ui & anim
+    t5 ~~~ verify
+    t6 ~~~ td & gd
+    t7 ~~~ desk
+
+    canon ==> main
+    rules ==> main
+    plan ==> main
+    coord ==> main
+    main ==> producer
+    producer ==>|"tasks"| gp
+    main ==> ui
+    main ==> anim
+    main -.-> later
+    gp ==>|"every change"| verify
+    ui ==> verify
+    anim ==> verify
+    verify ==>|pass| ue
+    verify ==>|"fail: fix and retry, max 3"| gp
+    ue ==> td
+    ue ==> gd
+    td ==>|"review notes"| desk
+    gd ==> desk
+    verify ==>|"3rd fail: error + best guess"| desk
+    desk ==> inbox ==> designer
+    designer ==>|"RÉPONSES REVIEW block"| log
+    log ==>|"settled facts"| canon
+    log ==>|"routes each answer"| main
+
+    linkStyle default stroke-width:4px
+    classDef planned stroke-dasharray: 6 6,color:#777
+    classDef ghost fill:none,stroke:none,color:transparent,height:10px
+    class later planned
+    class t1,t2,t3,t4,t5,t6,t7 ghost
+    style S1 fill:#e8f1ff,stroke:#2b5fb4,stroke-width:4px
+    style S2 fill:#eef9ee,stroke:#2e8b3d,stroke-width:4px
+    style S3 fill:#fff6e0,stroke:#c98a00,stroke-width:4px
+    style S4 fill:#fdeceb,stroke:#c0392b,stroke-width:4px
+    style S5 fill:#f1ecfb,stroke:#6b3fb4,stroke-width:4px
+    style S6 fill:#e9f8f8,stroke:#1f8a8a,stroke-width:4px
+    style S7 fill:#fff0f6,stroke:#b4326e,stroke-width:4px
